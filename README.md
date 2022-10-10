@@ -10,11 +10,11 @@
 
 
 4 模擬應用功能
-LCD顯示器顯示:Welcome timer simulation
-計時到0蜂鳴器發出鈴響且led燈閃爍
-中斷回主選單
-設定現在時間
-顯示當前時間
-LCD字幕提示
-LCD螢幕消除
+LCD顯示器顯示:Welcome timer simulation、
+計時到0蜂鳴器發出鈴響且led燈閃爍、
+中斷回主選單、
+設定現在時間、
+顯示當前時間、
+LCD字幕提示、
+LCD螢幕消除、
 顯示特定訊息
