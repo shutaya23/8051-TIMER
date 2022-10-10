@@ -1,0 +1,15 @@
+<html>
+<body>
+<pre>
+<h1>µVision2 Build Log</h1>
+<h2>Project:</h2>
+C:\Documents and Settings\Administrator\My Documents\8751¹êÅçªO³ø»ù\TE-8051\new ½d¨Ò\ok\TE-8051A½d¨Ò\FOR C\5-ADC0831\ADC0831.uv2
+Project File Date:  06/16/2008
+
+<h2>Output:</h2>
+Build target 'Target 1'
+compiling ADC0831.c...
+linking...
+Program Size: data=18.0 xdata=0 code=387
+creating hex file from "ADC0831"...
+"ADC0831" - 0 Error(s), 0 Warning(s).

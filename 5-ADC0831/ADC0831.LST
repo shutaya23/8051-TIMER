@@ -1,0 +1,121 @@
+C51 COMPILER V9.54   ADC0831                                                               05/01/2017 10:25:46 PAGE 1   
+
+
+C51 COMPILER V9.54, COMPILATION OF MODULE ADC0831
+OBJECT MODULE PLACED IN ADC0831.OBJ
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE ADC0831.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND TABS(2)
+
+line level    source
+
+   1          /*ADC0831轉換程式，請調整精密可變電阻,或有加裝其它感測器(如光敏電阻,濕度感測器,等等)，看看會如何變化*/
+   2          
+   3          #include <reg51.h>
+   4          #include <intrins.h>
+   5          
+   6          sbit SCL2=P1^3;   //SCL2定義為P1的第3腳，連接ADC0831SCL腳
+   7          sbit SDA2=P1^4;   //SDA2定義為P1的第4腳，連接ADC0831SDA腳
+   8          sbit CS2=P1^6;    //CS2定義為P1的第4腳，連接ADC0831CS腳
+   9          sbit RST = P1^5;// DS1302片選,因這兩晶片採用同一資料腳（SDA，SCL），所以我們要定義它，將DS1302片選關掉，否
+             -則發生衝突
+  10          
+  11          
+  12          code unsigned char table[]=
+  13                {0x3f,0x06,0x5b,0x4f,0x66,0x6d,0x7d,0x07,0x7f,0x6f};
+  14                //七段顯示器 0-9表
+  15          unsigned char l_tmpdate[]={0,0,0};//定義數組變量
+  16          void delay();//延時子函數，5個空指令
+  17          void display(unsigned char *lp,unsigned char lc);//數字的顯示函數；lp為指向數組的位址，lc為顯示的個數
+  18          unsigned char ad0831read(void); //定義該函數為讀取ADC0831的資料
+  19          
+  20          
+  21          void main(void)     //程式開始
+  22          {
+  23   1        unsigned char i=254,tmp;
+  24   1        RST=0;  
+  25   1        while(1){
+  26   2          i++;
+  27   2          if(i==255){   
+  28   3            tmp=ad0831read();   //這裡為循環255個週期讀取一次0831，因CPU執行比較快，沒必要每次循環都去讀取
+  29   3            i=0;    
+  30   3            l_tmpdate[0]=tmp/100;
+  31   3            tmp=tmp%100;
+  32   3            l_tmpdate[1]=tmp/10;
+  33   3            l_tmpdate[2]=tmp%10;    //因讀到的資料為8位的二進製數，即0~255，我們將其分開放入l_tmpdate中
+  34   3          }
+  35   2          display(l_tmpdate,3);   //輸出顯示
+  36   2        }
+  37   1      }
+  38          void display(unsigned char *lp,unsigned char lc)//顯示
+  39          {
+  40   1        unsigned char i;    //定義變量
+  41   1        P2=0;         //清除為0
+  42   1        P1=P1&0xF8;       //將P1的前3位輸出0，對應138輸入腳，全0為第一位七段顯示器
+  43   1        for(i=0;i<lc;i++){    //循環顯示
+  44   2        P2=table[lp[i]];    //查表法得到要顯示數字
+  45   2        delay();        //延時5個空指令 
+  46   2        if(i==7)        //檢測顯示完8位否，完成直接退出，不讓P1再加1，否則進位影響到第四位資料
+  47   2          break;
+  48   2        P2=0;         //清除為0，準備顯示下位
+  49   2        P1++;         //下一位七段顯示器
+  50   2        }
+  51   1      }
+  52          void delay(void)                //空5個指令
+  53          {
+  54   1        _nop_();_nop_();_nop_();_nop_();_nop_();
+C51 COMPILER V9.54   ADC0831                                                               05/01/2017 10:25:46 PAGE 2   
+
+  55   1      }
+  56          
+  57          unsigned char ad0831read(void)//請先解ADC0831轉換器的串列協議，再來讀本函數，
+  58          {               //本函數是類比0831的串列協議進行的，
+  59   1                      //以後，對於一個硬體這樣的就簡單多
+  60   1        unsigned char i=0,tmp=0;
+  61   1          SDA2=1;
+  62   1          CS2=0;
+  63   1          _nop_();
+  64   1          _nop_();
+  65   1          SCL2=0;
+  66   1          _nop_();
+  67   1          _nop_();
+  68   1          SCL2=1;
+  69   1          _nop_();
+  70   1          _nop_();
+  71   1          SCL2=0;
+  72   1          _nop_();
+  73   1          _nop_();
+  74   1          SCL2=1;
+  75   1          _nop_();
+  76   1          _nop_();
+  77   1          SCL2=0;
+  78   1          _nop_();
+  79   1          _nop_();
+  80   1          for(i=0;i<8;i++){
+  81   2            tmp<<=1;
+  82   2            if(SDA2)
+  83   2              tmp++;      
+  84   2            SCL2=1;
+  85   2            _nop_();
+  86   2            _nop_();
+  87   2            SCL2=0;
+  88   2            _nop_();
+  89   2            _nop_();
+  90   2          }
+  91   1          CS2=1;
+  92   1        return tmp;
+  93   1      }
+  94          
+  95          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    183    ----
+   CONSTANT SIZE    =     10    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      3       6
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

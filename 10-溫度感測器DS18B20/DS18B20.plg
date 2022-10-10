@@ -1,0 +1,19 @@
+<html>
+<body>
+<pre>
+<h1>猩ision2 Build Log</h1>
+<h2>Project:</h2>
+C:\Documents and Settings\Administrator\My Documents\8751實驗板報價\TE-8051\new 範例\ok\TE-8051A範例\FOR C\10-溫度感測器DS18B20\DS18B20.uv2
+Project File Date:  06/19/2008
+
+<h2>Output:</h2>
+Build target 'Target 1'
+compiling DS18B20.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?READROM?DS18B20
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?DELAY10MS?DS18B20
+Program Size: data=28.1 xdata=0 code=1613
+creating hex file from "DS18B20"...
+"DS18B20" - 0 Error(s), 2 Warning(s).
