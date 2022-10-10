@@ -1,0 +1,241 @@
+C51 COMPILER V9.56.0.0   REPORT                                                            06/17/2017 23:14:21 PAGE 1   
+
+
+C51 COMPILER V9.56.0.0, COMPILATION OF MODULE REPORT
+OBJECT MODULE PLACED IN .\Objects\report.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE report.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\re
+                    -port.lst) TABS(2) OBJECT(.\Objects\report.obj)
+
+line level    source
+
+   1          #include <reg51.h>
+   2          #include <intrins.h>
+   3          #include "time.h"
+   4          #include <string.h>
+   5          sbit SPK=P3^4;
+   6          #define DBPORT P2
+   7          sbit LCD_RS=P1^0;
+   8          sbit LCD_RW=P1^1;
+   9          sbit LCD_E=P1^2;
+  10          #define s 65536
+  11          #define t 12000000/12/2
+  12          #define d0 s-t/262
+  13          #define re s-t/294
+  14          #define mi s-t/330
+  15          #define fa s-t/349
+  16          #define so s-t/392
+  17          #define la s-t/440
+  18          #define si s-t/494
+  19          #define ss s-t/1
+  20          void delay(int count);
+  21          void delay10ms(int count);
+  22          void delaylcd(int cnt);
+  23          void show(int a,int b);
+  24          void init_lcd();
+  25          void lcd_data(char data1);
+  26          void lcd_cmd(char cmd);
+  27          void disp_str(char addr1,char *str,int delay);
+  28          void clear();
+  29          void sound(int j);
+  30          unsigned int table[7]={d0,re,mi,fa,so,la,si};
+  31          unsigned int tmp;
+  32          unsigned int code music[5]={d0,si,d0,si,si};
+  33          unsigned char location[]={0,1,2,3,4,5,6,7};
+  34          char num[]={0x3f,0x06,0x5b,0x4f,0x66,0x6d,0x7d,0x07,0x7f,0x6f,~0x88,0x7c,0x39,0x5e,0x79,0x71};
+  35          char code menu[]="WELCOME ALARM";
+  36          char code menu2[]="CLOCK SIMULATION";
+  37          char code ring[]="ring sound";
+  38          char code nothing[]="                  ";
+  39          char code set_time[]={"SET TIME"};
+  40          char code current_time[]={"CURRENT TIME"};
+  41          char code set_clock[]={"SET CLOCK"};
+  42          char code r1[]={"U0424019"};
+  43          char code r2[]={"U0424041"};
+  44          char code rer[]={"CREATORS"};
+  45          
+  46          void main(){
+  47   1       int i=0;
+  48   1       int kbin;
+  49   1       P2=0X00;
+  50   1       init_lcd();
+  51   1       disp_str(0x80,menu,0);
+  52   1       disp_str(0xc0,menu2,0);
+  53   1       P2=0X00;
+  54   1       while(1){
+C51 COMPILER V9.56.0.0   REPORT                                                            06/17/2017 23:14:21 PAGE 2   
+
+  55   2        delay1ms(1);
+  56   2        i++;
+  57   2        if (i>70){
+  58   3        tk();
+  59   3        i=i-720;
+  60   3        }  
+  61   2       kbin=kbscan(); 
+  62   2       u=0;
+  63   2       EA=1;//致能
+  64   2       ET1=0;//計時器T1
+  65   2       EX0=1;//外部中斷1
+  66   2       IE=0X88;//ET1=1
+  67   2       TMOD=0x10;//計時器模組
+  68   2       TH1=(65536-10000)/256; 
+  69   2       TL1=(65536-10000)%256;
+  70   2       TR1=0;//停?I-pRE
+  71   2      
+  72   2       while(kbin==0){ 
+  73   3       clear();
+  74   3       disp_str(0x80,ring,100);
+  75   3       sound(4);
+  76   3       break;
+  77   3       }
+  78   2       while(kbin==1){ 
+  79   3       clear();
+  80   3       disp_str(0x80,current_time,0);
+  81   3       time();
+  82   3       sound(1);
+  83   3       P2=0;
+  84   3       IE=0X89;
+  85   3       if (u==1){
+  86   4         u=0;
+  87   4         clear();  
+  88   4         break;
+  89   4       }
+  90   3       if (timeup==1){
+  91   4         timeup=0;
+  92   4       }
+  93   3       }
+  94   2       while(kbin==2){
+  95   3       clear();
+  96   3       disp_str(0x80,set_time,0);  
+  97   3       settime(1);
+  98   3       sound(1);
+  99   3       P1=0;
+ 100   3       P2=0;
+ 101   3       clear();  
+ 102   3       break;
+ 103   3       }
+ 104   2       while(kbin==6){
+ 105   3       clear();
+ 106   3       disp_str(0x80,menu,0);
+ 107   3       disp_str(0xc0,menu2,0);
+ 108   3       P2=0X00;
+ 109   3       IE=0X89;
+ 110   3       break;
+ 111   3       }
+ 112   2       while(kbin==3){
+ 113   3       clear();  
+ 114   3       disp_str(0xc0,set_clock,0);
+ 115   3       settime(2);
+ 116   3       clear();
+C51 COMPILER V9.56.0.0   REPORT                                                            06/17/2017 23:14:21 PAGE 3   
+
+ 117   3       P1=0;
+ 118   3       P2=0;
+ 119   3         
+ 120   3       break;
+ 121   3       }
+ 122   2      while(kbin==5){
+ 123   3       clear();
+ 124   3       disp_str(0x80,rer,100);
+ 125   3       sound(1);
+ 126   3       delay(5000);
+ 127   3       clear();
+ 128   3       disp_str(0x80,r1,100);
+ 129   3       sound(2);
+ 130   3       disp_str(0xc0,r2,100); 
+ 131   3       sound(3);
+ 132   3       break;
+ 133   3      }
+ 134   2      
+ 135   2      while(kbin==4){
+ 136   3       clear();
+ 137   3       break;
+ 138   3      }
+ 139   2      }
+ 140   1       
+ 141   1      }
+ 142           void show(int a,int b){
+ 143   1       P2=num[a];
+ 144   1       P1=location[b];
+ 145   1       delay1ms(1);
+ 146   1       } 
+ 147           void delay(int count){
+ 148   1       int i;
+ 149   1       for(i=0;i<count;i++);
+ 150   1       }
+ 151           
+ 152           void init_lcd(){
+ 153   1       delaylcd(5);
+ 154   1       lcd_cmd(0x3f);
+ 155   1       lcd_cmd(0xe);
+ 156   1       lcd_cmd(0x1);
+ 157   1       delaylcd(2);
+ 158   1       lcd_cmd(0x80);
+ 159   1       } 
+ 160           
+ 161          void clear(){
+ 162   1       init_lcd();
+ 163   1       disp_str(0x80,nothing,0);
+ 164   1       disp_str(0xc0,nothing,0);
+ 165   1      }
+ 166           
+ 167           void lcd_data(char data1){
+ 168   1       int i;
+ 169   1       DBPORT=data1;
+ 170   1       LCD_RS=1;LCD_RW=0;LCD_E=1;
+ 171   1       for(i=0;i<40;++i);
+ 172   1       LCD_RS=1;LCD_RW=0;LCD_E=0;
+ 173   1       }
+ 174           void lcd_cmd(char cmd){
+ 175   1       int i;
+ 176   1       DBPORT=cmd;
+ 177   1       LCD_RS=0;LCD_RW=0;LCD_E=1;
+ 178   1       for(i=0;i<40;++i);
+C51 COMPILER V9.56.0.0   REPORT                                                            06/17/2017 23:14:21 PAGE 4   
+
+ 179   1       LCD_RS=0;LCD_RW=0;LCD_E=0; 
+ 180   1       } 
+ 181           void disp_str(char addr1,char *str,int delay){
+ 182   1       lcd_cmd(addr1);
+ 183   1       while(*str!=0){
+ 184   2       lcd_data(*str++);
+ 185   2       P2=0;
+ 186   2       delaylcd(delay);}
+ 187   1      
+ 188   1       }
+ 189           
+ 190           void T1_int(void) interrupt 3 using 1
+ 191           {
+ 192   1       TH1=tmp/256; //song[j];
+ 193   1       TL1=tmp%256; //song[j+1];
+ 194   1       SPK = !SPK;
+ 195   1      
+ 196   1      } /* T1_int */ 
+ 197          void sound(int j){
+ 198   1       int i;
+ 199   1       ET1=1;
+ 200   1       for(i=0;i<j;i++)
+ 201   1       { tmp=music[4];
+ 202   2       TR1=1;
+ 203   2       delay(4000);
+ 204   2       TR1=0;
+ 205   2       delay(4000);
+ 206   2       delay(1280);
+ 207   2       }
+ 208   1       TR1=0;
+ 209   1       IE=0X89;
+ 210   1       ET1=0; 
+ 211   1       }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   2068    ----
+   CONSTANT SIZE    =    134    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     77      31
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      1    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
