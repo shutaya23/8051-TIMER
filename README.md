@@ -1,7 +1,5 @@
 # 8051-TIMER
-1系統名稱:多功能計時器 
-
-ACS - Alarm Clock Simulation  
+1系統名稱:多功能計時器 ACS - Alarm Clock Simulation  
 2 系統背景:
 
 8-bit 8051 microcontroller unit (MCU)  
