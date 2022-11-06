@@ -23,3 +23,5 @@ LCD螢幕消除、
 
 ![Scree](https://github.com/shutaya23/ACS-Alarm-Clock-Simulation/blob/main/SAMPLE.png)
 
+![Scree](https://github.com/shutaya23/ACS-Alarm-Clock-Simulation/blob/main/SAMPLE2.png)
+
