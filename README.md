@@ -21,5 +21,4 @@ LCD字幕提示、
 LCD螢幕消除、
 顯示特定訊息
 
-
-[image1]: ./sample1.png "sample"
+![Scree](https://github.com/shutaya23/ACS-Alarm-Clock-Simulation/sample.png)
