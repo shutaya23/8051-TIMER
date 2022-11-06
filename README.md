@@ -22,3 +22,4 @@ LCD螢幕消除、
 顯示特定訊息
 
 ![Scree](https://github.com/shutaya23/ACS-Alarm-Clock-Simulation/main/sample.png)
+https://github.com/shutaya23/ACS-Alarm-Clock-Simulation/blob/main/SAMPLE.png
